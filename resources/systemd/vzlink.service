@@ -1,0 +1,17 @@
+[Unit]
+Description=Gunicorn instance to serve vzlink
+After=network.target
+
+[Service]
+User=vzlink
+Group=www-data
+WorkingDirectory=/home/vzlink/vzlink
+Environment='APP_SECRET_KEY=EXAMPLE-KEY'
+Environment='HASHIDS_SALT=EXAMPLE-SALT'
+Environment='JWT_SECRET_KEY=EXAMPLE-KEY'
+Environment='JWT_REFRESH_KEY=EXAMPLE-KEY'
+Environment='SQL_DATABASE_URI=mysql+pymysql://vzlink:EXAMPLE-KEY@localhost:3306/vzlink'
+ExecStart=/bin/bash -c 'cd /home/vzlink/vzlink && source /home/vzlink/miniconda3/bin/activate vzlink && gunicorn --workers 5 --bind unix:vzlink.sock -m 007 wsgi:app'
+
+[Install]
+WantedBy=multi-user.target

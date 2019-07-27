@@ -1,0 +1,21 @@
+server {
+    listen 80;
+    server_name EXAMPLE-FQDN.com www.EXAMPLE-FQDN.com;
+    return 302 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    server_name EXAMPLE-FQDN.com www.EXAMPLE-FQDN.com;
+
+    ssl on;
+    ssl_certificate /etc/nginx/ssl/vzlink.crt;
+    ssl_certificate_key /etc/nginx/ssl/vzlink.key;
+    ssl_session_timeout  5m;
+    add_header Strict-Transport-Security "max-age=7200";
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/vzlink/vzlink/vzlink.sock;
+    }
+}
